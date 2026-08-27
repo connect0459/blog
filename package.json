@@ -9,7 +9,14 @@
 		"dev": "astro dev",
 		"build": "astro build",
 		"preview": "astro preview",
-		"astro": "astro"
+		"astro": "astro",
+		"lint": "eslint .",
+		"lint:fix": "eslint . --fix",
+		"lint:md": "markdownlint-cli2 \"**/*.{md,mdx}\" \"#node_modules\" \"#dist\"",
+		"lint:md:fix": "markdownlint-cli2 --fix \"**/*.{md,mdx}\" \"#node_modules\" \"#dist\"",
+		"format": "prettier --write .",
+		"format:check": "prettier --check .",
+		"typecheck": "astro check"
 	},
 	"dependencies": {
 		"@astrojs/mdx": "^7.0.8",
@@ -20,5 +27,16 @@
 	},
 	"allowScripts": {
 		"esbuild": true
+	},
+	"devDependencies": {
+		"@astrojs/check": "0.9.10",
+		"@eslint/js": "10.0.1",
+		"eslint": "10.9.1",
+		"eslint-plugin-astro": "1.7.0",
+		"markdownlint-cli2": "0.23.2",
+		"prettier": "3.9.6",
+		"prettier-plugin-astro": "0.14.1",
+		"typescript": "6.0.3",
+		"typescript-eslint": "8.68.0"
 	}
 }
