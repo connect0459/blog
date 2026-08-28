@@ -1,0 +1,118 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+
+run-name: CI on ${{ github.head_ref || github.ref_name }}
+
+permissions:
+  contents: read
+  pull-requests: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
+jobs:
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      code: ${{ steps.filter.outputs.code }}
+    steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+        with:
+          persist-credentials: false
+
+      - uses: dorny/paths-filter@7b450fff21473bca461d4b92ce414b9d0420d706 # v4.0.2
+        id: filter
+        with:
+          filters: |
+            code:
+              - '.github/workflows/ci.yml'
+              - 'public/**'
+              - 'src/**'
+              - '.nvmrc'
+              - 'astro.config.mjs'
+              - 'package-lock.json'
+              - 'package.json'
+              - 'tsconfig.json'
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6.5.0
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install dependencies
+        shell: bash
+        run: npm ci
+
+      - name: Check formatting
+        shell: bash
+        run: npm run format:check
+
+      - name: Lint
+        shell: bash
+        run: npm run lint
+
+      - name: Lint Markdown
+        shell: bash
+        run: npm run lint:md
+
+      - name: Type check
+        shell: bash
+        run: npm run typecheck
+
+  build:
+    needs: changes
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6.5.0
+        if: needs.changes.outputs.code == 'true' || github.event_name == 'workflow_dispatch'
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install dependencies
+        if: needs.changes.outputs.code == 'true' || github.event_name == 'workflow_dispatch'
+        shell: bash
+        run: npm ci
+
+      - name: Build site
+        if: needs.changes.outputs.code == 'true' || github.event_name == 'workflow_dispatch'
+        shell: bash
+        run: npm run build
+
+      - name: Skip CI checks (no relevant changes)
+        if: needs.changes.outputs.code != 'true' && github.event_name != 'workflow_dispatch'
+        run: echo "No changes detected in code-related files."
+
+  # Single point of truth for branch protection
+  gate:
+    runs-on: ubuntu-latest
+    needs:
+      - changes
+      - lint
+      - build
+    if: always()
+    steps:
+      - name: Verify all required jobs succeeded
+        if: contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled')
+        shell: bash
+        run: |
+          echo "One or more required jobs did not succeed."
+          exit 1
