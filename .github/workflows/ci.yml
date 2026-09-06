@@ -75,6 +75,7 @@ jobs:
 
   build:
     needs: changes
+    if: needs.changes.outputs.code == 'true' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
@@ -82,24 +83,17 @@ jobs:
           persist-credentials: false
 
       - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6.5.0
-        if: needs.changes.outputs.code == 'true' || github.event_name == 'workflow_dispatch'
         with:
           node-version-file: .nvmrc
           cache: npm
 
       - name: Install dependencies
-        if: needs.changes.outputs.code == 'true' || github.event_name == 'workflow_dispatch'
         shell: bash
         run: npm ci
 
       - name: Build site
-        if: needs.changes.outputs.code == 'true' || github.event_name == 'workflow_dispatch'
         shell: bash
         run: npm run build
-
-      - name: Skip CI checks (no relevant changes)
-        if: needs.changes.outputs.code != 'true' && github.event_name != 'workflow_dispatch'
-        run: echo "No changes detected in code-related files."
 
   # Single point of truth for branch protection
   gate:
