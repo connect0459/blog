@@ -1,6 +1,4 @@
 ---
-import type { ImageMetadata } from 'astro';
-import { Image } from 'astro:assets';
 import { getCollection } from 'astro:content';
 import AuthorBio from '../components/AuthorBio.astro';
 import BaseHead from '../components/BaseHead.astro';
@@ -33,20 +31,6 @@ const entries = [
 ];
 
 const yearGroups = groupByYear(entries);
-
-const faviconModules = import.meta.glob<{ default: ImageMetadata }>(
-	'../assets/favicons/*.{png,ico,svg,webp,jpg,jpeg}',
-	{ eager: true },
-);
-const faviconsByDomain = new Map(
-	Object.entries(faviconModules).map(([path, mod]) => {
-		const domain = path
-			.split('/')
-			.pop()!
-			.replace(/\.[^.]+$/, '');
-		return [domain, mod.default];
-	}),
-);
 ---
 
 <html lang="ja">
@@ -62,55 +46,42 @@ const faviconsByDomain = new Map(
 					yearGroups.map((group) => (
 						<div class="year-group">
 							<div class="year-label">{group.year}</div>
-							{group.entries.map((entry) => {
-								const favicon =
-									entry.kind === 'external'
-										? faviconsByDomain.get(entry.domain)
-										: undefined;
-								return (
-									<a
-										class="entry-row"
-										href={entry.href}
-										target={entry.kind === 'external' ? '_blank' : undefined}
-										rel={
-											entry.kind === 'external'
-												? 'noopener noreferrer'
-												: undefined
-										}
-									>
-										{entry.kind === 'native' ? (
-											<span
-												class="entry-icon entry-icon-internal"
-												aria-hidden="true"
-											/>
-										) : favicon ? (
-											<Image
-												class="entry-icon entry-favicon"
-												src={favicon}
-												alt=""
-												width={16}
-												height={16}
-											/>
-										) : (
-											<span
-												class="entry-icon entry-icon-placeholder"
-												aria-hidden="true"
-											>
-												{entry.domain.charAt(0).toUpperCase()}
-											</span>
+							{group.entries.map((entry) => (
+								<a
+									class="entry-row"
+									href={entry.href}
+									target={entry.kind === 'external' ? '_blank' : undefined}
+									rel={
+										entry.kind === 'external'
+											? 'noopener noreferrer'
+											: undefined
+									}
+								>
+									{entry.kind === 'native' ? (
+										<span
+											class="entry-icon entry-icon-internal"
+											aria-hidden="true"
+										/>
+									) : (
+										<img
+											class="entry-icon entry-favicon"
+											src={`https://www.google.com/s2/favicons?sz=32&domain=${entry.domain}`}
+											alt=""
+											width={16}
+											height={16}
+										/>
+									)}
+									<span class="entry-main">
+										<span class="entry-title">{entry.title}</span>
+										{entry.kind === 'external' && (
+											<span class="entry-domain">{entry.domain} ↗</span>
 										)}
-										<span class="entry-main">
-											<span class="entry-title">{entry.title}</span>
-											{entry.kind === 'external' && (
-												<span class="entry-domain">{entry.domain} ↗</span>
-											)}
-										</span>
-										<span class="entry-date">
-											<FormattedDate date={entry.pubDate} format="short" />
-										</span>
-									</a>
-								);
-							})}
+									</span>
+									<span class="entry-date">
+										<FormattedDate date={entry.pubDate} format="short" />
+									</span>
+								</a>
+							))}
 						</div>
 					))
 				}
@@ -162,15 +133,6 @@ const faviconsByDomain = new Map(
 	}
 	.entry-favicon {
 		object-fit: cover;
-	}
-	.entry-icon-placeholder {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		font-size: var(--fs-caption);
-		font-weight: var(--fw-medium);
-		color: var(--on-surface);
-		background: var(--surface-container);
 	}
 	.entry-main {
 		display: flex;
