@@ -1,0 +1,43 @@
+---
+import { type CollectionEntry, getCollection, render } from 'astro:content';
+import {
+	findAdjacentEntries,
+	toTimelineEntry,
+	type NativeTimelineEntry,
+} from '../../features/timeline/model';
+import ArticleLayout from '../../layouts/ArticleLayout.astro';
+
+export async function getStaticPaths() {
+	const posts = await getCollection('articles');
+	return posts.map((post) => ({
+		params: { slug: post.id },
+		props: post,
+	}));
+}
+type Props = CollectionEntry<'articles'>;
+
+const post = Astro.props;
+const { Content } = await render(post);
+
+const allPosts = await getCollection('articles');
+const nativeEntries = allPosts
+	.map((p) =>
+		toTimelineEntry({
+			type: 'article',
+			slug: p.id,
+			title: p.data.title,
+			pubDate: p.data.pubDate,
+		}),
+	)
+	.filter((entry): entry is NativeTimelineEntry => entry.kind === 'native')
+	.sort((a, b) => b.pubDate.valueOf() - a.pubDate.valueOf());
+
+const { prev, next } = findAdjacentEntries(
+	nativeEntries,
+	`/articles/${post.id}/`,
+);
+---
+
+<ArticleLayout {...post.data} prev={prev} next={next}>
+	<Content />
+</ArticleLayout>
