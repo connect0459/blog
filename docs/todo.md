@@ -15,12 +15,12 @@ This repository is currently the unmodified Astro starter blog template. This pl
 - **Article page**: back-to-list link, date + title, prose body, an author bio card at the bottom, then prev/next links to adjacent native articles.
 - **Footer**: a single copyright line, nothing else.
 
-## Open decisions to confirm before/while implementing
+## Decisions confirmed with the user (2026-09-10)
 
-- **External-entry favicons**: the mockup renders a generated placeholder (first letter of the domain) because the design tool has no network access at render time. For the real build, decide between a live favicon-fetch service and a self-generated initial-letter placeholder before Phase 3.
-- **External entries as a content collection vs. plain data**: recommend a second Astro content collection (e.g. `links`) with a `{ title, url, pubDate }` schema, for the same validation Astro already gives `articles` — confirm before Phase 1.
-- **RSS feed scope**: native articles only, or external entries too. Recommend native-only, since the feed can't carry content this site doesn't host.
-- **Coverage target** for the new timeline domain logic (Phase 2): agree on a number/scope with the user before writing it, per the project's TDD philosophy.
+- **External-entry favicons**: no runtime third-party dependency. When a `links` entry is added, the author runs a local fetch script (Phase 5) that downloads the target site's favicon once and commits it into the repo (e.g. `src/assets/favicons/<domain>.<ext>`). Pages read only the committed local asset; there is no favicon fetch at build or request time. If no local asset exists for a domain, render the self-generated initial-letter placeholder instead. Rejected: a live favicon-fetch service called from the page, because it leaks visitor referrer data to a third party on every view and makes the static site depend on that service's uptime.
+- **External entries as a content collection**: confirmed — a second Astro content collection `links` with a `{ title, url, pubDate }` schema, validated the same way as `articles`.
+- **RSS feed scope**: confirmed native-only (`articles`); `links` entries are excluded since the feed cannot carry content this site doesn't host.
+- **Coverage target** for the Phase 2 timeline domain logic: 100%. Justified by the module being pure functions with no DOM/Astro boundary and few branches, so full coverage is cheap and directly enforces the Detroit-school TDD approach already mandated by `CLAUDE.md`.
 
 ---
 
@@ -67,7 +67,8 @@ Package-by-features: new `src/features/timeline/` directory. Everything here is 
 ## Phase 5: Content migration
 
 - [ ] Remove the starter sample posts (`first-post.md`, `second-post.md`, `third-post.md`, `markdown-style-guide.md`, `using-mdx.mdx`).
-- [ ] Add the real external cross-posts as `links` entries (title/url/pubDate only).
+- [ ] Write a local favicon fetch script (e.g. `scripts/fetch-favicon.mjs`) that downloads a given domain's favicon once and saves it under `src/assets/favicons/<domain>.<ext>`, for the author to run manually when adding a `links` entry; the timeline falls back to the initial-letter placeholder when no committed asset exists for a domain.
+- [ ] Add the real external cross-posts as `links` entries (title/url/pubDate only), running the favicon fetch script for each and committing the resulting asset.
 - [ ] Author at least one real native article under `src/content/articles/` to validate the article layout end-to-end.
 - [ ] Add a real avatar image for the home profile block, replacing the mockup's placeholder box.
 
