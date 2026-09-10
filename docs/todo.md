@@ -39,12 +39,12 @@ This repository is currently the unmodified Astro starter blog template. This pl
 
 Package-by-features: new `src/features/timeline/` directory. Everything here is pure data transformation over in-memory values — no DOM/Astro boundary, so no mocks are needed (Detroit-school).
 
-- [ ] Write failing tests first for `src/features/timeline/model.ts`:
+- [x] Write failing tests first for `src/features/timeline/model.ts`:
   - `toTimelineEntry` — maps an `articles` entry to an internal entry (`href: /articles/<slug>/`) and a `links` entry to an external one (`href: url`, `domain: new URL(url).hostname`).
   - `groupByYear` — groups entries by calendar year from the ISO date; years and in-year entries both sorted descending.
   - `formatShortDate` — `yyyy-MM-dd` → `MM-dd`.
   - `findAdjacentEntries` — prev/next native article relative to the current one, given a date-sorted list.
-- [ ] Implement until green.
+- [x] Implement until green. 100% coverage confirmed via `npm run test:coverage`.
 
 ## Phase 3: Design tokens & global styles
 
