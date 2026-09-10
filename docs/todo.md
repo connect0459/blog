@@ -26,14 +26,14 @@ This repository is currently the unmodified Astro starter blog template. This pl
 
 ## Phase 0: Tooling prerequisites
 
-- [ ] Add Vitest as a devDependency; add `"test": "vitest run"` / `"test:watch": "vitest"` to `package.json`. Nothing in this project currently runs unit tests, and Phase 2 needs a runner before any Red/Green cycle can start.
-- [ ] Confirm the coverage target for the new domain logic with the user (see open decisions above).
+- [x] Add Vitest as a devDependency; add `"test": "vitest run"` / `"test:watch": "vitest"` to `package.json`. Nothing in this project currently runs unit tests, and Phase 2 needs a runner before any Red/Green cycle can start.
+- [x] Confirm the coverage target for the new domain logic with the user (see open decisions above).
 
 ## Phase 1: Content model
 
-- [ ] Rename the `blog` collection to `articles` in `src/content.config.ts` (loader base `./src/content/articles`); schema unchanged (`title`, `description`, `pubDate`, `updatedDate?`, `heroImage?`).
-- [ ] Add a `links` collection for external cross-posts: `{ title: string, url: z.string().url(), pubDate: z.coerce.date() }`, no body content.
-- [ ] Remove `src/pages/about.astro` — its role is replaced by the home page's inline bio.
+- [x] Rename the `blog` collection to `articles` in `src/content.config.ts` (loader base `./src/content/articles`); schema unchanged (`title`, `description`, `pubDate`, `updatedDate?`, `heroImage?`).
+- [x] Add a `links` collection for external cross-posts: `{ title: string, url: z.url(), pubDate: z.coerce.date() }`, no body content (implemented via the `file()` loader over a single keyed `links.yaml`, since there is no per-entry body).
+- [x] Remove `src/pages/about.astro` — its role is replaced by the home page's inline bio.
 
 ## Phase 2: Timeline domain logic (Red/Green TDD)
 
