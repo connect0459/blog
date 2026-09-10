@@ -4,19 +4,27 @@ import { SITE_TITLE } from '../consts';
 const year = new Date().getFullYear();
 ---
 
-<footer>
-	<p>&copy; {year} {SITE_TITLE}</p>
+<footer class="site-footer">
+	<div class="footer-bottom">
+		<p class="footer-copyright">&copy; {year} {SITE_TITLE}</p>
+	</div>
 </footer>
 <style>
-	footer {
-		padding: var(--s-5) 0 var(--s-6) 0;
-	}
-	p {
-		width: 680px;
-		max-width: calc(100% - 2em);
+	.site-footer {
+		width: 100%;
+		max-width: 680px;
 		margin: auto;
+		box-sizing: border-box;
+		padding: 0 24px 40px;
+	}
+	.footer-bottom {
+		display: flex;
+		justify-content: space-between;
+	}
+	.footer-copyright {
+		margin: 0;
 		font-size: var(--fs-caption);
-		letter-spacing: var(--tr-caption);
-		color: var(--secondary);
+		letter-spacing: 0.1em;
+		color: var(--tertiary);
 	}
 </style>
