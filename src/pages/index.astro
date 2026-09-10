@@ -60,58 +60,58 @@ const faviconsByDomain = new Map(
 			<div class="timeline">
 				{
 					yearGroups.map((group) => (
-						<section class="year-group">
-							<h2>{group.year}</h2>
-							<ul>
-								{group.entries.map((entry) => {
-									const favicon =
-										entry.kind === 'external'
-											? faviconsByDomain.get(entry.domain)
-											: undefined;
-									return (
-										<li>
-											<a
-												class="entry"
-												href={entry.href}
-												target={
-													entry.kind === 'external' ? '_blank' : undefined
-												}
-												rel={
-													entry.kind === 'external'
-														? 'noopener noreferrer'
-														: undefined
-												}
+						<div class="year-group">
+							<div class="year-label">{group.year}</div>
+							{group.entries.map((entry) => {
+								const favicon =
+									entry.kind === 'external'
+										? faviconsByDomain.get(entry.domain)
+										: undefined;
+								return (
+									<a
+										class="entry-row"
+										href={entry.href}
+										target={entry.kind === 'external' ? '_blank' : undefined}
+										rel={
+											entry.kind === 'external'
+												? 'noopener noreferrer'
+												: undefined
+										}
+									>
+										{entry.kind === 'native' ? (
+											<span
+												class="entry-icon entry-icon-internal"
+												aria-hidden="true"
+											/>
+										) : favicon ? (
+											<Image
+												class="entry-icon entry-favicon"
+												src={favicon}
+												alt=""
+												width={16}
+												height={16}
+											/>
+										) : (
+											<span
+												class="entry-icon entry-icon-placeholder"
+												aria-hidden="true"
 											>
-												{entry.kind === 'native' ? (
-													<span class="marker native" aria-hidden="true" />
-												) : favicon ? (
-													<Image
-														class="marker favicon"
-														src={favicon}
-														alt=""
-														width={16}
-														height={16}
-													/>
-												) : (
-													<span class="marker placeholder" aria-hidden="true">
-														{entry.domain.charAt(0).toUpperCase()}
-													</span>
-												)}
-												<span class="entry-text">
-													<span class="title">{entry.title}</span>
-													{entry.kind === 'external' && (
-														<span class="domain">{entry.domain} ↗</span>
-													)}
-												</span>
-											</a>
-											<span class="date">
-												<FormattedDate date={entry.pubDate} format="short" />
+												{entry.domain.charAt(0).toUpperCase()}
 											</span>
-										</li>
-									);
-								})}
-							</ul>
-						</section>
+										)}
+										<span class="entry-main">
+											<span class="entry-title">{entry.title}</span>
+											{entry.kind === 'external' && (
+												<span class="entry-domain">{entry.domain} ↗</span>
+											)}
+										</span>
+										<span class="entry-date">
+											<FormattedDate date={entry.pubDate} format="short" />
+										</span>
+									</a>
+								);
+							})}
+						</div>
 					))
 				}
 			</div>
@@ -120,74 +120,77 @@ const faviconsByDomain = new Map(
 	</body>
 </html>
 <style>
-	main {
-		display: flex;
-		flex-direction: column;
-		gap: var(--s-8);
-	}
 	.timeline {
+		margin-top: 112px;
 		display: flex;
 		flex-direction: column;
 		gap: var(--s-6);
 	}
-	.year-group h2 {
-		margin-bottom: var(--s-3);
-	}
-	.year-group ul {
-		list-style: none;
-		margin: 0;
-		padding: 0;
-	}
-	.year-group li {
+	.year-group {
 		display: flex;
+		flex-direction: column;
+		gap: 6px;
+	}
+	.year-label {
+		font-size: 20px;
+		font-weight: var(--fw-light);
+		letter-spacing: -0.01em;
+		margin-bottom: 12px;
+	}
+	.entry-row {
+		display: grid;
+		grid-template-columns: 20px minmax(0, 1fr) auto;
 		align-items: center;
-		justify-content: space-between;
-		gap: var(--s-3);
-		padding: var(--s-2) 0;
+		gap: 14px;
+		padding: 10px 12px;
+		margin: 0 -12px;
+		font-size: 15px;
+		line-height: 1.6;
+		background-image: none;
+		transition: background var(--dur) var(--ease);
 	}
-	.entry {
-		display: flex;
-		align-items: center;
-		gap: var(--s-2);
-		min-width: 0;
+	.entry-row:hover {
+		background: var(--surface-container-low);
 	}
-	.marker {
-		flex-shrink: 0;
-	}
-	.marker.native {
-		width: 8px;
-		height: 8px;
-		background: var(--primary);
-	}
-	.marker.favicon {
+	.entry-icon {
 		width: 16px;
 		height: 16px;
+		display: block;
 	}
-	.marker.placeholder {
+	.entry-icon-internal {
+		background: var(--on-surface);
+	}
+	.entry-favicon {
+		object-fit: cover;
+	}
+	.entry-icon-placeholder {
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		width: 16px;
-		height: 16px;
 		font-size: var(--fs-caption);
 		font-weight: var(--fw-medium);
 		color: var(--on-surface);
 		background: var(--surface-container);
 	}
-	.entry-text {
+	.entry-main {
 		display: flex;
 		flex-direction: column;
+		gap: 2px;
 		min-width: 0;
 	}
-	.domain {
-		font-size: var(--fs-caption);
-		letter-spacing: var(--tr-caption);
+	.entry-title {
+		text-wrap: pretty;
+	}
+	.entry-domain {
+		font-size: 11px;
+		letter-spacing: 0.04em;
 		color: var(--tertiary);
 	}
-	.date {
-		flex-shrink: 0;
-		font-size: var(--fs-caption);
-		letter-spacing: var(--tr-caption);
-		color: var(--secondary);
+	.entry-date {
+		font-size: 12px;
+		font-variant-numeric: tabular-nums;
+		letter-spacing: 0.04em;
+		white-space: nowrap;
+		color: var(--tertiary);
 	}
 </style>
