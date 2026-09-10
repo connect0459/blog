@@ -24,44 +24,43 @@ const { title, description, pubDate, updatedDate, heroImage, prev, next } =
 		<Header />
 		<main>
 			<a href="/" class="back-link">← 一覧</a>
-			<article>
-				<div class="meta">
-					<FormattedDate date={pubDate} />
-					{
-						updatedDate && (
-							<span class="updated">
-								（更新: <FormattedDate date={updatedDate} />）
-							</span>
-						)
-					}
-				</div>
-				<h1>{title}</h1>
-				<div class="prose">
+			<article class="blog-post-container">
+				<header class="post-header">
+					<h1 class="post-title">{title}</h1>
+					<div class="post-meta">
+						<FormattedDate date={pubDate} />
+						{
+							updatedDate && (
+								<>
+									<span class="post-meta-separator">·</span>
+									更新: <FormattedDate date={updatedDate} />
+								</>
+							)
+						}
+					</div>
+				</header>
+				<div class="post-content">
 					<slot />
 				</div>
 			</article>
 			<AuthorBio />
-			<nav class="adjacent" aria-label="記事ナビゲーション">
-				<div class="prev">
-					{
-						prev && (
-							<a href={prev.href}>
-								<span class="label">← 前の記事</span>
-								<span class="title">{prev.title}</span>
-							</a>
-						)
-					}
-				</div>
-				<div class="next">
-					{
-						next && (
-							<a href={next.href}>
-								<span class="label">次の記事 →</span>
-								<span class="title">{next.title}</span>
-							</a>
-						)
-					}
-				</div>
+			<nav class="prev-next" aria-label="記事ナビゲーション">
+				{
+					prev && (
+						<a href={prev.href} class="prev-link">
+							<span class="label">← 前の記事</span>
+							<span class="title">{prev.title}</span>
+						</a>
+					)
+				}
+				{
+					next && (
+						<a href={next.href} class="next-link">
+							<span class="label">次の記事 →</span>
+							<span class="title">{next.title}</span>
+						</a>
+					)
+				}
 			</nav>
 		</main>
 		<Footer />
@@ -74,43 +73,61 @@ const { title, description, pubDate, updatedDate, heroImage, prev, next } =
 		gap: var(--s-7);
 	}
 	.back-link {
-		font-size: var(--fs-label);
-		letter-spacing: var(--tr-label);
+		font-size: var(--fs-caption);
+		letter-spacing: 0.14em;
+		color: var(--tertiary);
+	}
+	.post-header {
+		display: flex;
+		flex-direction: column;
+		gap: var(--s-3);
+	}
+	.post-title {
+		font-size: clamp(24px, 4vw, 30px);
+		line-height: 1.45;
+		font-weight: var(--fw-regular);
+		letter-spacing: -0.01em;
+	}
+	.post-meta {
+		font-size: 12px;
+		letter-spacing: 0.1em;
 		color: var(--secondary);
 	}
-	.meta {
-		margin-bottom: var(--s-2);
-		font-size: var(--fs-label);
-		letter-spacing: var(--tr-label);
-		color: var(--secondary);
+	.post-meta-separator {
+		margin: 0 4px;
 	}
-	.updated {
-		margin-left: var(--s-2);
+	.post-content {
+		margin-top: var(--s-6);
+		display: flex;
+		flex-direction: column;
+		gap: var(--s-4);
+		font-size: 16px;
+		line-height: 1.9;
 	}
-	article h1 {
-		margin-bottom: var(--s-5);
+	.post-content :global(h2) {
+		margin-top: var(--s-4);
 	}
-	.adjacent {
+	.prev-next {
 		display: flex;
 		justify-content: space-between;
 		gap: var(--s-3);
 		padding-top: var(--s-5);
 		border-top: 1px solid var(--outline);
 	}
-	.adjacent a {
+	.prev-link,
+	.next-link {
 		display: flex;
 		flex-direction: column;
-		gap: var(--s-1);
+		gap: 4px;
+		font-size: 13px;
 	}
-	.next {
+	.next-link {
+		margin-left: auto;
 		text-align: right;
 	}
-	.next a {
-		align-items: flex-end;
-	}
 	.label {
-		font-size: var(--fs-caption);
-		letter-spacing: var(--tr-caption);
-		color: var(--secondary);
+		font-size: 11px;
+		letter-spacing: 0.14em;
+		color: var(--tertiary);
 	}
 </style>
