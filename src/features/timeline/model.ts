@@ -56,6 +56,13 @@ export function formatShortDate(date: Date): string {
 	return `${month}-${day}`;
 }
 
+export function formatFullDate(date: Date): string {
+	const year = date.getUTCFullYear();
+	const month = String(date.getUTCMonth() + 1).padStart(2, '0');
+	const day = String(date.getUTCDate()).padStart(2, '0');
+	return `${year}-${month}-${day}`;
+}
+
 export interface YearGroup {
 	readonly year: number;
 	readonly entries: readonly TimelineEntry[];

@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
 	findAdjacentEntries,
+	formatFullDate,
 	formatShortDate,
 	groupByYear,
 	type NativeTimelineEntry,
@@ -66,6 +67,30 @@ describe('formatShortDate', () => {
 		try {
 			expect(formatShortDate(new Date(Date.UTC(2024, 11, 31, 23)))).toBe(
 				'12-31',
+			);
+		} finally {
+			process.env.TZ = originalTz;
+		}
+	});
+});
+
+describe('formatFullDate', () => {
+	it('formats a date as yyyy-MM-dd', () => {
+		expect(formatFullDate(new Date(Date.UTC(2024, 5, 15)))).toBe(
+			'2024-06-15',
+		);
+	});
+
+	it('zero-pads a single-digit month and day', () => {
+		expect(formatFullDate(new Date(Date.UTC(2024, 0, 5)))).toBe('2024-01-05');
+	});
+
+	it('reads the year, month, and day in UTC regardless of the host timezone', () => {
+		const originalTz = process.env.TZ;
+		process.env.TZ = 'Pacific/Kiritimati'; // UTC+14, rolls the local date to Jan 1
+		try {
+			expect(formatFullDate(new Date(Date.UTC(2024, 11, 31, 23)))).toBe(
+				'2024-12-31',
 			);
 		} finally {
 			process.env.TZ = originalTz;
