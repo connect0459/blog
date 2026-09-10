@@ -76,9 +76,7 @@ describe('formatShortDate', () => {
 
 describe('formatFullDate', () => {
 	it('formats a date as yyyy-MM-dd', () => {
-		expect(formatFullDate(new Date(Date.UTC(2024, 5, 15)))).toBe(
-			'2024-06-15',
-		);
+		expect(formatFullDate(new Date(Date.UTC(2024, 5, 15)))).toBe('2024-06-15');
 	});
 
 	it('zero-pads a single-digit month and day', () => {
