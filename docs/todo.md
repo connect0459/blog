@@ -48,11 +48,11 @@ Package-by-features: new `src/features/timeline/` directory. Everything here is 
 
 ## Phase 3: Design tokens & global styles
 
-- [ ] Replace the `:root` tokens in `src/styles/global.css` with the mockup's palette (background/surface/primary/on-surface/secondary/tertiary/outline + ghost-border rgba tokens), type scale (display/headline/title/body/label/caption — size, line-height, letter-spacing), 8px spacing scale, `--radius: 0`, and motion/easing tokens. Drop the Bear-Blog-derived tokens they replace (`--accent`, `--gray-gradient`, `--box-shadow`).
-- [ ] Re-derive base element rules from the mockup: `h1`–`h3` sizes/weights, `p`/`small` text styles, ghost-underline link hover, `code`/`pre` monospace styling.
-- [ ] Do not add a dark-mode block.
-- [ ] Fonts: in `astro.config.mjs`, replace the local `Atkinson` font entry with Noto Sans JP via `fontProviders.google()`; remove `src/assets/fonts/atkinson-*.woff` once unused; rename the `--font-atkinson` CSS variable (and its `Font cssVariable` usage in `BaseHead.astro`) to `--font-sans`.
-- [ ] Standardize on a 680px centered max-width container across all pages, replacing the current ad-hoc 720px/960px widths in `index.astro`, `blog/index.astro`, and `BlogPost.astro`.
+- [x] Replace the `:root` tokens in `src/styles/global.css` with the mockup's palette (background/surface/primary/on-surface/secondary/tertiary/outline + ghost-border rgba tokens), type scale (display/headline/title/body/label/caption — size, line-height, letter-spacing), 8px spacing scale, `--radius: 0`, and motion/easing tokens. Drop the Bear-Blog-derived tokens they replace (`--accent`, `--gray-gradient`, `--box-shadow`).
+- [x] Re-derive base element rules from the mockup: `h1`–`h3` sizes/weights, `p`/`small` text styles, ghost-underline link hover, `code`/`pre` monospace styling.
+- [x] Do not add a dark-mode block.
+- [x] Fonts: in `astro.config.mjs`, replace the local `Atkinson` font entry with Noto Sans JP via `fontProviders.google()`; remove `src/assets/fonts/atkinson-*.woff` once unused; rename the `--font-atkinson` CSS variable (and its `Font cssVariable` usage in `BaseHead.astro`) to `--font-sans`.
+- [x] Standardize on a 680px centered max-width container across all pages, replacing the current ad-hoc 720px/960px widths in `index.astro`, `blog/index.astro`, and `BlogPost.astro`.
 
 ## Phase 4: Layout & components
 
