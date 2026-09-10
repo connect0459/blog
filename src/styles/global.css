@@ -1,36 +1,93 @@
 /*
-  The CSS in this style tag is based off of Bear Blog's default CSS.
-  https://github.com/HermanMartinus/bearblog/blob/297026a877bc2ab2b3bdfbd6b9f7961c350917dd/templates/styles/blog/default.css
-  License MIT: https://github.com/HermanMartinus/bearblog/blob/master/LICENSE.md
+  Sovereign Archive design tokens.
  */
 
 :root {
-	--accent: #2337ff;
-	--accent-dark: #000d8a;
-	--black: 15, 18, 25;
-	--gray: 96, 115, 159;
-	--gray-light: 229, 233, 240;
-	--gray-dark: 34, 41, 57;
-	--gray-gradient: rgba(var(--gray-light), 50%), #fff;
-	--box-shadow:
-		0 2px 6px rgba(var(--gray), 25%), 0 8px 24px rgba(var(--gray), 33%),
-		0 16px 32px rgba(var(--gray), 33%);
+	/* Color */
+	--background: #f9f9f9;
+	--surface: #f4f4f4;
+	--surface-container-low: #efefef;
+	--surface-container: #eaeaea;
+	--surface-container-lowest: #ffffff;
+
+	--primary: #000000;
+	--primary-container: #121212;
+	--primary-fixed: #1f1f1f;
+	--on-primary: #ffffff;
+
+	--on-surface: #121212;
+	--secondary: #5e5e5e;
+	--tertiary: #8a8a8a;
+	--disabled: #b5b5b5;
+
+	--outline: #c6c6c6;
+	--outline-variant: #c6c6c6;
+
+	--ghost-10: rgba(198, 198, 198, 0.1);
+	--ghost-20: rgba(198, 198, 198, 0.2);
+	--ghost-40: rgba(198, 198, 198, 0.4);
+
+	/* Type scale */
+	--fs-display: 3.5rem;
+	--fs-headline: 2rem;
+	--fs-title: 1.25rem;
+	--fs-body: 1rem;
+	--fs-label: 0.75rem;
+	--fs-caption: 0.6875rem;
+
+	--lh-display: 1.1;
+	--lh-headline: 1.25;
+	--lh-title: 1.4;
+	--lh-body: 1.75;
+	--lh-label: 1.4;
+
+	--tr-display: -0.02em;
+	--tr-headline: -0.01em;
+	--tr-body: 0;
+	--tr-label: 0.14em;
+	--tr-caption: 0.06em;
+
+	--fw-light: 300;
+	--fw-regular: 400;
+	--fw-medium: 500;
+	--fw-bold: 700;
+
+	/* Spacing (8px grid) */
+	--s-0: 0;
+	--s-1: 4px;
+	--s-2: 8px;
+	--s-3: 16px;
+	--s-4: 24px;
+	--s-5: 32px;
+	--s-6: 48px;
+	--s-7: 64px;
+	--s-8: 96px;
+	--s-9: 128px;
+	--s-10: 192px;
+
+	/* Shape */
+	--radius: 0;
+
+	/* Motion */
+	--ease: cubic-bezier(0.2, 0, 0, 1);
+	--dur-fast: 160ms;
+	--dur: 280ms;
+	--dur-slow: 600ms;
 }
 body {
-	font-family: var(--font-atkinson);
+	font-family: var(--font-sans);
 	margin: 0;
 	padding: 0;
 	text-align: left;
-	background: linear-gradient(var(--gray-gradient)) no-repeat;
-	background-size: 100% 600px;
+	background: var(--background);
 	word-wrap: break-word;
 	overflow-wrap: break-word;
-	color: rgb(var(--gray-dark));
-	font-size: 20px;
-	line-height: 1.7;
+	color: var(--on-surface);
+	font-size: var(--fs-body);
+	line-height: var(--lh-body);
 }
 main {
-	width: 720px;
+	width: 680px;
 	max-width: calc(100% - 2em);
 	margin: auto;
 	padding: 3em 1em;
@@ -42,17 +99,22 @@ h4,
 h5,
 h6 {
 	margin: 0 0 0.5rem 0;
-	color: rgb(var(--black));
+	color: var(--on-surface);
 	line-height: 1.2;
 }
 h1 {
-	font-size: 3.052em;
+	font-size: var(--fs-display);
+	letter-spacing: var(--tr-display);
+	font-weight: var(--fw-light);
 }
 h2 {
-	font-size: 2.441em;
+	font-size: var(--fs-headline);
+	letter-spacing: var(--tr-headline);
+	font-weight: var(--fw-regular);
 }
 h3 {
-	font-size: 1.953em;
+	font-size: var(--fs-title);
+	font-weight: var(--fw-medium);
 }
 h4 {
 	font-size: 1.563em;
@@ -62,19 +124,31 @@ h5 {
 }
 strong,
 b {
-	font-weight: 700;
+	font-weight: var(--fw-bold);
 }
 a {
-	color: var(--accent);
+	color: inherit;
+	text-decoration: none;
+	background-image: linear-gradient(var(--on-surface), var(--on-surface));
+	background-size: 0% 1px;
+	background-repeat: no-repeat;
+	background-position: 0 100%;
+	transition: background-size var(--dur) var(--ease);
 }
 a:hover {
-	color: var(--accent);
+	background-size: 100% 1px;
 }
 p {
 	margin-bottom: 1em;
 }
 .prose p {
 	margin-bottom: 2em;
+}
+small {
+	font-size: var(--fs-caption);
+	line-height: var(--lh-label);
+	letter-spacing: var(--tr-caption);
+	color: var(--secondary);
 }
 textarea {
 	width: 100%;
@@ -89,34 +163,33 @@ table {
 img {
 	max-width: 100%;
 	height: auto;
-	border-radius: 8px;
+	border-radius: var(--radius);
 }
 code {
 	padding: 2px 5px;
-	background-color: rgb(var(--gray-light));
-	border-radius: 2px;
+	background-color: var(--surface);
+	border-radius: var(--radius);
+	font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+	font-size: 0.875em;
 }
 pre {
 	padding: 1.5em;
-	border-radius: 8px;
+	border-radius: var(--radius);
 }
 pre > code {
 	all: unset;
 }
 blockquote {
-	border-left: 4px solid var(--accent);
+	border-left: 4px solid var(--on-surface);
 	padding: 0 0 0 20px;
 	margin: 0;
 	font-size: 1.333em;
 }
 hr {
 	border: none;
-	border-top: 1px solid rgb(var(--gray-light));
+	border-top: 1px solid var(--outline);
 }
 @media (max-width: 720px) {
-	body {
-		font-size: 18px;
-	}
 	main {
 		padding: 1em;
 	}
