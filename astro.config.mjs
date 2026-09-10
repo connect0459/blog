@@ -10,26 +10,12 @@ export default defineConfig({
 	integrations: [mdx(), sitemap()],
 	fonts: [
 		{
-			provider: fontProviders.local(),
-			name: 'Atkinson',
-			cssVariable: '--font-atkinson',
+			provider: fontProviders.google(),
+			name: 'Noto Sans JP',
+			cssVariable: '--font-sans',
 			fallbacks: ['sans-serif'],
-			options: {
-				variants: [
-					{
-						src: ['./src/assets/fonts/atkinson-regular.woff'],
-						weight: 400,
-						style: 'normal',
-						display: 'swap',
-					},
-					{
-						src: ['./src/assets/fonts/atkinson-bold.woff'],
-						weight: 700,
-						style: 'normal',
-						display: 'swap',
-					},
-				],
-			},
+			weights: ['300', '400', '500', '700'],
+			subsets: ['latin', 'japanese'],
 		},
 	],
 });
