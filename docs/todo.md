@@ -56,17 +56,17 @@ Package-by-features: new `src/features/timeline/` directory. Everything here is 
 
 ## Phase 4: Layout & components
 
-- [ ] `Header.astro`: reduce to the site name (linking to `/`) plus an `RSS` link to `/rss.xml`; remove the `HeaderLink` nav and the social SVG icons (those move into the home profile block).
-- [ ] `Footer.astro`: reduce to a single copyright line sourced from `consts.ts`; remove the duplicated social icon links.
-- [ ] `src/pages/index.astro`: profile section (avatar, name, one-line bio, GitHub/Zenn/X links) followed by the timeline built from `groupByYear(...)` over merged `articles` + `links` entries. Remove the current starter-template welcome copy.
-- [ ] Remove `src/pages/blog/index.astro` — its listing role is fully replaced by the home timeline.
-- [ ] Article page (`src/pages/articles/[...slug].astro` + `src/layouts/BlogPost.astro`, renamed if appropriate): back-to-list link, date + title header, prose body, author bio card, then a prev/next row driven by `findAdjacentEntries`.
-- [ ] `FormattedDate.astro`: support both the article page's full date and the timeline row's `MM-dd` short date.
-- [ ] Drop the hero-image block from the article layout — the mockup shows no cover images. Keep `heroImage` in frontmatter only as an OGP-image source, not rendered inline.
+- [x] `Header.astro`: reduce to the site name (linking to `/`) plus an `RSS` link to `/rss.xml`; remove the `HeaderLink` nav and the social SVG icons (those move into the home profile block).
+- [x] `Footer.astro`: reduce to a single copyright line sourced from `consts.ts`; remove the duplicated social icon links.
+- [x] `src/pages/index.astro`: profile section (avatar, name, one-line bio, GitHub/Zenn/X links) followed by the timeline built from `groupByYear(...)` over merged `articles` + `links` entries. Remove the current starter-template welcome copy.
+- [x] Remove `src/pages/blog/index.astro` — its listing role is fully replaced by the home timeline.
+- [x] Article page (`src/pages/articles/[...slug].astro` + `src/layouts/BlogPost.astro`, renamed if appropriate): back-to-list link, date + title header, prose body, author bio card, then a prev/next row driven by `findAdjacentEntries`. Renamed the layout to `src/layouts/ArticleLayout.astro`.
+- [x] `FormattedDate.astro`: support both the article page's full date and the timeline row's `MM-dd` short date.
+- [x] Drop the hero-image block from the article layout — the mockup shows no cover images. Keep `heroImage` in frontmatter only as an OGP-image source, not rendered inline.
 
 ## Phase 5: Content migration
 
-- [ ] Remove the starter sample posts (`first-post.md`, `second-post.md`, `third-post.md`, `markdown-style-guide.md`, `using-mdx.mdx`).
+- [x] Remove the starter sample posts (`first-post.md`, `second-post.md`, `third-post.md`, `markdown-style-guide.md`, `using-mdx.mdx`). Done ahead of schedule during Phase 4: `using-mdx.mdx` imported the now-deleted `HeaderLink.astro`, which broke `npm run build`; removing all five together (rather than patching one import) avoided keeping dead starter content around only to delete it again in this phase.
 - [ ] Write a local favicon fetch script (e.g. `scripts/fetch-favicon.mjs`) that downloads a given domain's favicon once and saves it under `src/assets/favicons/<domain>.<ext>`, for the author to run manually when adding a `links` entry; the timeline falls back to the initial-letter placeholder when no committed asset exists for a domain.
 - [ ] Add the real external cross-posts as `links` entries (title/url/pubDate only), running the favicon fetch script for each and committing the resulting asset.
 - [ ] Author at least one real native article under `src/content/articles/` to validate the article layout end-to-end.
