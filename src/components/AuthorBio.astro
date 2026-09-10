@@ -1,0 +1,64 @@
+---
+import { SITE_DESCRIPTION, SITE_TITLE, type AuthorLink } from '../consts';
+
+interface Props {
+	links?: readonly AuthorLink[];
+}
+
+const { links } = Astro.props;
+---
+
+<div class="author-bio">
+	<div class="identity">
+		<div class="avatar" aria-hidden="true"></div>
+		<p class="name">{SITE_TITLE}</p>
+	</div>
+	<p class="bio">{SITE_DESCRIPTION}</p>
+	{
+		links && (
+			<ul class="links">
+				{links.map((link) => (
+					<li>
+						<a href={link.href} target="_blank" rel="noopener noreferrer">
+							{link.label} ↗
+						</a>
+					</li>
+				))}
+			</ul>
+		)
+	}
+</div>
+<style>
+	.identity {
+		display: flex;
+		align-items: center;
+		gap: var(--s-3);
+		margin-bottom: var(--s-3);
+	}
+	.avatar {
+		width: var(--s-6);
+		height: var(--s-6);
+		flex-shrink: 0;
+		background: var(--surface-container);
+	}
+	.name {
+		margin: 0;
+		font-size: var(--fs-title);
+		font-weight: var(--fw-medium);
+	}
+	.bio {
+		margin: 0;
+		color: var(--secondary);
+	}
+	.links {
+		display: flex;
+		gap: var(--s-3);
+		list-style: none;
+		margin: var(--s-3) 0 0 0;
+		padding: 0;
+	}
+	.links a {
+		font-size: var(--fs-label);
+		letter-spacing: var(--tr-label);
+	}
+</style>
