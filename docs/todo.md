@@ -17,10 +17,14 @@ This repository is currently the unmodified Astro starter blog template. This pl
 
 ## Decisions confirmed with the user (2026-09-10)
 
-- **External-entry favicons**: no runtime third-party dependency. When a `links` entry is added, the author runs a local fetch script (Phase 5) that downloads the target site's favicon once and commits it into the repo (e.g. `src/assets/favicons/<domain>.<ext>`). Pages read only the committed local asset; there is no favicon fetch at build or request time. If no local asset exists for a domain, render the self-generated initial-letter placeholder instead. Rejected: a live favicon-fetch service called from the page, because it leaks visitor referrer data to a third party on every view and makes the static site depend on that service's uptime.
+- **External-entry favicons**: ~~no runtime third-party dependency~~ — superseded 2026-09-11, see below.
 - **External entries as a content collection**: confirmed — a second Astro content collection `links` with a `{ title, url, pubDate }` schema, validated the same way as `articles`.
 - **RSS feed scope**: confirmed native-only (`articles`); `links` entries are excluded since the feed cannot carry content this site doesn't host.
 - **Coverage target** for the Phase 2 timeline domain logic: 100%. Justified by the module being pure functions with no DOM/Astro boundary and few branches, so full coverage is cheap and directly enforces the Detroit-school TDD approach already mandated by `CLAUDE.md`.
+
+## Decisions confirmed with the user (2026-09-11)
+
+- **External-entry favicons, reversed**: the timeline now renders `<img src="https://www.google.com/s2/favicons?sz=32&domain=<domain>">` directly, matching `../blog-mbt`'s live implementation, instead of the committed-local-asset approach decided on 2026-09-10. The referrer-leak and third-party-uptime tradeoffs from that decision still apply and are accepted for now; committed local favicon assets (with the initial-letter fallback) remain a possible future revisit, at which point the Phase 5 fetch-script bullet below would come back.
 
 ---
 
@@ -67,8 +71,8 @@ Package-by-features: new `src/features/timeline/` directory. Everything here is 
 ## Phase 5: Content migration
 
 - [x] Remove the starter sample posts (`first-post.md`, `second-post.md`, `third-post.md`, `markdown-style-guide.md`, `using-mdx.mdx`). Done ahead of schedule during Phase 4: `using-mdx.mdx` imported the now-deleted `HeaderLink.astro`, which broke `npm run build`; removing all five together (rather than patching one import) avoided keeping dead starter content around only to delete it again in this phase.
-- [ ] Write a local favicon fetch script (e.g. `scripts/fetch-favicon.mjs`) that downloads a given domain's favicon once and saves it under `src/assets/favicons/<domain>.<ext>`, for the author to run manually when adding a `links` entry; the timeline falls back to the initial-letter placeholder when no committed asset exists for a domain.
-- [ ] Add the real external cross-posts as `links` entries (title/url/pubDate only), running the favicon fetch script for each and committing the resulting asset.
+- [x] ~~Write a local favicon fetch script~~ — superseded 2026-09-11: the timeline now fetches favicons live from Google's s2 service instead of committed local assets (see the decision above), so no fetch script is needed for now.
+- [ ] Add the real external cross-posts as `links` entries (title/url/pubDate only).
 - [ ] Author at least one real native article under `src/content/articles/` to validate the article layout end-to-end.
 - [ ] Add a real avatar image for the home profile block, replacing the mockup's placeholder box.
 
